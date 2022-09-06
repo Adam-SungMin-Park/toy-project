@@ -17,20 +17,28 @@ data = requests.get('https://ticket.interpark.com/ConcertIndex.asp?utm_source=go
 
 soup = BeautifulSoup(data.text, 'html.parser')
 
+title = soup.select('dt.issue_obj');
+for titles in title:
+    singer = titles.select_one('p> span.txt1').text
+    location = titles.select_one('p> span.txt2').text
+    image = titles.select_one('div.thumb> img ')['src']
+    doc = {
+        'singer': singer,
+        'location': location,
+        'image': image
+    }
+    db.toyproject.insert_one(doc)
 
 
-
+#Hot_0_On > div > a > img
 @app.route('/')
 def home():
     return render_template('index.html')
 
 
-@app.route('/', methods = ['GET'])
-def load_homepage():
-    title = soup.select('dt.issue_obj');
-    for titles in title:
-        a = titles.select_one('p> span.txt1')
-        return a
+#@app.route('/', methods = ['GET'])
+#def load_homepage():
+
 
 
 @app.route('/more_info')
