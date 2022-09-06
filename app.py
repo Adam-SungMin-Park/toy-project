@@ -17,18 +17,20 @@ data = requests.get('https://ticket.interpark.com/ConcertIndex.asp?utm_source=go
 
 soup = BeautifulSoup(data.text, 'html.parser')
 
-title = soup.select('dt.issue_obj');
-
-
-for titles in title:
-    a = titles.select_one('p> span.txt1')
-    print(a.text)
 
 
 
 @app.route('/')
 def home():
     return render_template('index.html')
+
+
+@app.route('/', methods = ['GET'])
+def load_homepage():
+    title = soup.select('dt.issue_obj');
+    for titles in title:
+        a = titles.select_one('p> span.txt1')
+        return a
 
 
 @app.route('/more_info')
