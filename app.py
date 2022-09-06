@@ -6,7 +6,8 @@ import uuid
 
 app = Flask(__name__)
 
-
+def id_generator():
+    return str(uuid.uuid4().int)[30:]
 
 client = MongoClient('mongodb+srv://test:sparta@cluster0.o2cbi29.mongodb.net/Cluster0?retryWrites=true&w=majority',
                      UuidRepresentation="standard")
@@ -17,17 +18,25 @@ data = requests.get('https://ticket.interpark.com/ConcertIndex.asp?utm_source=go
 
 soup = BeautifulSoup(data.text, 'html.parser')
 
+
+
+
 title = soup.select('dt.issue_obj');
 for titles in title:
     singer = titles.select_one('p> span.txt1').text
     location = titles.select_one('p> span.txt2').text
     image = titles.select_one('div.thumb> img ')['src']
     doc = {
+        'id': id_generator(),
         'singer': singer,
         'location': location,
         'image': image
     }
-    db.toyproject.insert_one(doc)
+
+    if len(list(db.toyproject.find({}))) < 80:
+        db.toyproject.insert_one(doc)
+
+
 
 
 #Hot_0_On > div > a > img
