@@ -45,8 +45,10 @@ def home():
     return render_template('index.html')
 
 
-#@app.route('/', methods = ['GET'])
-#def load_homepage():
+@app.route('/home', methods = ['GET'])
+def load_homepage():
+    allList = list(db.toyproject.find({},{'_id':False}))
+    return jsonify({'msg':allList})
 
 
 
