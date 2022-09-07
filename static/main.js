@@ -1,16 +1,22 @@
-function testing() {
-    alert('!')
-}
+function testing(key) {
+   console.log(key)
+   $('.popup').show()
+   $.ajax({
+      type:"GET",
+      url:'/detail',
+      data:{},
+      success: function(response){
+         console.log(response)
+      }
+   })
 
+}
 
 $(document).ready(function () {
     loadHomePage()
 });
 
-function detailPage(key){
-   console.log(key)
-   location.href='/detail'
-}
+
 
 function loadHomePage() {
     $.ajax({
@@ -26,7 +32,7 @@ function loadHomePage() {
              let eventSinger = data[i].singer
              let eventLocation = data[i].location
              let html = `
-                        <div class="col">
+                        <div onclick="testing(${detailNumber})" class="col">
                           <div class="card" id = "${detailNumber}">
                             <img src="${imageSrc}" class="card-img-top" alt="...">
                             <a>
@@ -41,12 +47,7 @@ function loadHomePage() {
              $('.row').append(html)
              const entry = document.getElementsByClassName('card')
 
-             for(let j = 0 ; j < entry.length; j++){
-                entry[j].addEventListener('click',(imageSrc)=>{
-                   let eventKey = entry[j].id
-                   detailPage(eventKey)
-                })
-             }
+
 
 
 
