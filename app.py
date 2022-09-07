@@ -33,13 +33,12 @@ for titles in title:
         'image': image
     }
 
-    if len(list(db.toyproject.find({}))) < 80:
+    if len(list(db.toyproject.find({}))) < 40:
         db.toyproject.insert_one(doc)
 
 
 
 
-#Hot_0_On > div > a > img
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -52,9 +51,10 @@ def load_homepage():
 
 
 
-@app.route('/more_info')
+@app.route('/detail')
 def more_info():
     return render_template('moreInfo.html')
+#the detail page url = "https://tickets.interpark.com/goods/"+ last 7 digits
 
 
 if __name__ == '__main__':
