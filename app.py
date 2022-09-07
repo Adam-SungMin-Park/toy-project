@@ -44,6 +44,12 @@ def home():
     return render_template('index.html')
 
 
+@app.route('/detail')
+def more_info():
+    return render_template('moreInfo.html')
+#the detail page url = "https://tickets.interpark.com/goods/"+ last 7 digits
+
+
 @app.route('/home', methods = ['GET'])
 def load_homepage():
     allList = list(db.toyproject.find({},{'_id':False}))
@@ -51,10 +57,6 @@ def load_homepage():
 
 
 
-@app.route('/detail')
-def more_info():
-    return render_template('moreInfo.html')
-#the detail page url = "https://tickets.interpark.com/goods/"+ last 7 digits
 
 
 if __name__ == '__main__':
