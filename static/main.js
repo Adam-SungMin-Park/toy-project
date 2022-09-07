@@ -3,8 +3,8 @@ function testing(key) {
    $('.popup').show()
    $.ajax({
       type:"GET",
-      url:'/detail',
-      data:{},
+      url:"/popup",
+      data:{ url_give: key},
       success: function(response){
          console.log(response)
       }
