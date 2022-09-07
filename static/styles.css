@@ -1,5 +1,21 @@
-
 .row {
     max-width: 90%;
     margin: auto;
+}
+.banner{
+    text-align:center;
+}
+
+.card-body,.homePage{
+    text-decoration: none;
+     color:black;
+}
+.popup{
+    position:absolute;
+    border-radius:6px;
+    width:1000px;
+    height:1000px;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
 }
