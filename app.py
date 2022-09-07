@@ -16,6 +16,7 @@ headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
 data = requests.get('https://ticket.interpark.com/ConcertIndex.asp?utm_source=google&utm_medium=cpc&utm_campaign=ticket_concert_20210617_pc_cpc_paidsearch&utm_content=consider_34&utm_term=%EC%BD%98%EC%84%9C%ED%8A%B8&_emk_keyword=%EC%BD%98%EC%84%9C%ED%8A%B8&gclid=Cj0KCQjw39uYBhCLARIsAD_SzMTiWL3pU729Lc47JPjt5zcOhhaMEvhKuSwlt3S4bxOqvXqfSh1Aw2EaAnfwEALw_wcB', headers=headers)
 
+
 soup = BeautifulSoup(data.text, 'html.parser')
 
 
@@ -32,6 +33,13 @@ for titles in title:
         'location': location,
         'image': image
     }
+    # detail_serial = image[66:74]
+    # for numbers in detail_serial:
+    #     detail_data = requests.get('https://tickets.interpark.com/goods/'+ numbers)
+    #     second_soup = BeautifulSoup(detail_data.text, 'html.parser')
+    #     location = second_soup.select_one('#container > div.contents > div.productWrapper > div.productMain > div.productMainTop > div > div.summaryBody > ul > li:nth-child(2) > div > p')
+    #     print(location)
+    # STOPPED HERE. TRY USING SELENIUM TO RETRIEVE JS DATA 
 
     if len(list(db.toyproject.find({}))) < 40:
         db.toyproject.insert_one(doc)
@@ -48,6 +56,15 @@ def home():
 def more_info():
     return render_template('moreInfo.html')
 #the detail page url = "https://tickets.interpark.com/goods/"+ last 7 digits
+
+
+
+
+@app.route('/popup' , methods =['GET'])
+def get_popup_info():
+    url_receive = request.form('url_give')
+    detail_data = requests.get('https://tickets.interpark.com/goods/'+url_receive, headers=headers)
+    return detail_data
 
 
 @app.route('/home', methods = ['GET'])
