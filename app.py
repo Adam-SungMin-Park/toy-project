@@ -33,7 +33,7 @@ for titles in title:
         'image': image
     }
 
-    if len(list(db.toyproject.find({}))) < 80:
+    if len(list(db.toyproject.find({}))) < 40:
         db.toyproject.insert_one(doc)
 
 
