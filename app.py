@@ -4,14 +4,31 @@ from pymongo import MongoClient
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
 from selenium.webdriver.common.by import By
 import requests
 import uuid
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-driver.get('https://ticket.interpark.com/ConcertIndex.asp?utm_source=google&utm_medium=cpc&utm_campaign=ticket_concert_20210617_pc_cpc_paidsearch&utm_content=consider_34&utm_term=%EC%BD%98%EC%84%9C%ED%8A%B8&_emk_keyword=%EC%BD%98%EC%84%9C%ED%8A%B8&gclid=Cj0KCQjw39uYBhCLARIsAD_SzMTiWL3pU729Lc47JPjt5zcOhhaMEvhKuSwlt3S4bxOqvXqfSh1Aw2EaAnfwEALw_wcB')
-testing = driver.find_elements(By.CLASS_NAME, 'issue_obj')
-print(testing[0])
+driver.get('https://tickets.interpark.com/goods/22010748')
+try:
+    all_list = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CLASS_NAME, 'contents'))
+    )
+    print(all_list.text)
+except:
+    driver.quit()
+
+
+
+
+
+
+
+# print(driver.find_element(By.CLASS_NAME, 'wrap_issue'))
 
 
 app = Flask(__name__)
