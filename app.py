@@ -18,11 +18,12 @@ try:
     all_list = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.CLASS_NAME, 'contents'))
     )
+
     print(all_list.text)
 except:
     driver.quit()
 
-
+# this can be used for the detailed page
 
 
 
