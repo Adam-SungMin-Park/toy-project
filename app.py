@@ -15,6 +15,7 @@ import uuid
 app = Flask(__name__)
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 
+
 # try:
 #     all_list = WebDriverWait(driver, 10).until(
 #         EC.presence_of_element_located((By.CLASS_NAME, 'contents'))
@@ -72,21 +73,20 @@ def home():
     return render_template('index.html')
 
 
-
-
 @app.route('/detail')
 def more_info():
     return render_template('moreInfo.html')
 
 
-
-#the detail page url = "https://tickets.interpark.com/goods/"+ last 7 digits
+# the detail page url = "https://tickets.interpark.com/goods/"+ last 7 digits
 
 @app.route('/popup', methods=['GET'])
 def get_popup_info():
     url_receive = request.form('url_give')
     print(url_receive)
-    driver.get('https://tickets.interpark.com/goods/' + url_receive)
+    if url_receive is not "":
+        print(url_receive)
+        driver.get('https://tickets.interpark.com/goods/' + url_receive)
     try:
         all_list = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CLASS_NAME, 'contents'))
