@@ -1,10 +1,10 @@
 function testing(key) {
-   console.log(key)
+   let url = "https://tickets.interpark.com/goods/"+ key
    $('.popup').show()
    $.ajax({
       type:"GET",
-      url:"/popup",
-      data:{ url_give: key},
+      url:"/",
+      data:{ url_give: url},
       success: function(response){
          console.log(response)
       }
