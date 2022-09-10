@@ -69,28 +69,32 @@ def more_info():
 
 # the detail page url = "https://tickets.interpark.com/goods/"+ last 7 digits
 
-@app.route('/', methods=['GET'])
+@app.route('/detail', methods=['GET'])
 def get_popup_info():
-    # url_receive = request.form['url_give']
-    url_receive =request.form.get("url_give", False)
-    print(url_receive)
-    if url_receive != "":
-        print(url_receive)
+    url_receive = request.form['url_give']
+    figured = list(db.toyproject.find({'detailPage': url_receive}, {'_id': False}))
+    return jsonify(figured)
 
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-        print(url_receive)
-        driver.get(url_receive)
-        try:
-            all_list = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.CLASS_NAME, 'contents'))
-            )
-            return jsonify(all_list.text)
-            driver.quit()
-        except:
-            driver.quit()
 
-    detail_data = requests.get('https://tickets.interpark.com/goods/' + url_receive, headers=headers)
-    return detail_data
+    # url_receive =request.form.get("url_give", False)
+    # print(url_receive)
+    # if url_receive != "":
+    #     print(url_receive)
+    #
+    #     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+    #     print(url_receive)
+    #     driver.get(url_receive)
+    #     try:
+    #         all_list = WebDriverWait(driver, 10).until(
+    #             EC.presence_of_element_located((By.CLASS_NAME, 'contents'))
+    #         )
+    #         return jsonify(all_list.text)
+    #         driver.quit()
+    #     except:
+    #         driver.quit()
+
+    # detail_data = requests.get('https://tickets.interpark.com/goods/' + url_receive, headers=headers)
+    # return detail_data
 
 
 @app.route('/home', methods=['GET'])

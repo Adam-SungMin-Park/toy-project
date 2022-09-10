@@ -1,37 +1,36 @@
-function testing(key) {
-   let url = "https://tickets.interpark.com/goods/"+ key
-   $('.popup').show()
-   $.ajax({
-      type:"GET",
-      url:"/",
-      data:{ url_give: url},
-      success: function(response){
-         console.log(response)
-      }
-   })
-
-}
-
 $(document).ready(function () {
     loadHomePage()
 });
 
+function testing(key) {
+   console.log('detail page fire')
+    let url = "https://tickets.interpark.com/goods/" + key
+    $('.popup').show()
+    $.ajax({
+        type: "GET",
+        url: "/detail",
+        data: {url_give: url},
+        success: function (response) {
+            console.log(response)
+        }
+    })
+}
 
 
 function loadHomePage() {
     $.ajax({
-       type: 'GET',
-       url: '/home',
-       data: {},
-       success: function (response) {
-          let data = response.msg
-          for (let i = 0; i < data.length; i++) {
-             let detailNumber = data[i].image.slice(66, 74)
-             let imageSrc = data[i].image
-             let eventId = data[i].id
-             let eventSinger = data[i].singer
-             let eventLocation = data[i].location
-             let html = `
+        type: 'GET',
+        url: '/home',
+        data: {},
+        success: function (response) {
+            let data = response.msg
+            for (let i = 0; i < data.length; i++) {
+                let detailNumber = data[i].image.slice(66, 74)
+                let imageSrc = data[i].image
+                let eventId = data[i].id
+                let eventSinger = data[i].singer
+                let eventLocation = data[i].location
+                let html = `
                         <div onclick="testing(${detailNumber})" class="col">
                           <div class="card" id = "${detailNumber}">
                             <img src="${imageSrc}" class="card-img-top" alt="...">
@@ -44,17 +43,14 @@ function loadHomePage() {
                           </div>
                         </div>
                        `
-             $('.row').append(html)
-             const entry = document.getElementsByClassName('card')
+                $('.row').append(html)
+                const entry = document.getElementsByClassName('card')
 
 
+            }
 
 
-
-          }
-
-
-       }
+        }
     })
 
 }
