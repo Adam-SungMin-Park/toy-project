@@ -62,19 +62,13 @@ def home():
     return render_template('index.html')
 
 
-@app.route('/detail')
-def more_info():
-    return render_template('moreInfo.html')
-
-
 # the detail page url = "https://tickets.interpark.com/goods/"+ last 7 digits
 
 @app.route('/detail', methods=['GET'])
 def get_popup_info():
-    url_receive = request.form['url_give']
+    url_receive = request.form.get('urls_give')
     figured = list(db.toyproject.find({'detailPage': url_receive}, {'_id': False}))
-    return jsonify(figured)
-
+    return jsonify({'msg': figured})
 
     # url_receive =request.form.get("url_give", False)
     # print(url_receive)
