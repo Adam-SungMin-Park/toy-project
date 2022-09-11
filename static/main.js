@@ -3,13 +3,16 @@ $(document).ready(function () {
 });
 
 function testing(key) {
-   console.log('detail page fire')
-    let url = "https://tickets.interpark.com/goods/" + key
+
+    let url = ("https://tickets.interpark.com/goods/" + key)
+    console.log(url)
     $('.popup').show()
     $.ajax({
         type: "GET",
         url: "/detail",
-        data: {url_give: url},
+        data: {
+            urls_give: url
+        },
         success: function (response) {
             console.log(response)
         }
