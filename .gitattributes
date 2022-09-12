@@ -1,1 +1,1 @@
-api.key filter=git-crypt diff=git-crypt
+db.py filter=git-crypt diff=git-crypt
