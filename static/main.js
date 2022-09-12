@@ -3,7 +3,6 @@ $(document).ready(function () {
 });
 
 function testing(key) {
-
     let url = ("https://tickets.interpark.com/goods/" + key)
     console.log(url)
     $('.popup').show()
@@ -27,6 +26,7 @@ function loadHomePage() {
         data: {},
         success: function (response) {
             let data = response.msg
+            console.log(data)
             for (let i = 0; i < data.length; i++) {
                 let detailNumber = data[i].image.slice(66, 74)
                 let imageSrc = data[i].image
@@ -34,7 +34,7 @@ function loadHomePage() {
                 let eventSinger = data[i].singer
                 let eventLocation = data[i].location
                 let html = `
-                        <div onclick="testing(${detailNumber})" class="col">
+                        <div class="col">
                           <div class="card" id = "${detailNumber}">
                             <img src="${imageSrc}" class="card-img-top" alt="...">
                             <a>
