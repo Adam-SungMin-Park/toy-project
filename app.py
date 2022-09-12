@@ -7,7 +7,6 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import time
 from selenium.webdriver.common.by import By
 import requests
 import uuid
@@ -34,7 +33,10 @@ for titles in title:
     location = titles.select_one('p> span.txt2').text
     image = titles.select_one('div.thumb> img ')['src']
     detail_serial = 'https://tickets.interpark.com/goods/'+ titles.select_one('div.thumb> img ')['src'][66:74]
-
+    data2 = requests.get(detail_serial, headers =headers)
+    soup2 = BeautifulSoup(data.text, 'html.parser')
+    testing = soup2.select('#container > div.contents > div.productWrapper > div.productMain > div.productMainTop > div > div.summaryBody > div > div.posterBoxTop > img')
+    # print(testing)
     doc = {
         'id': id_generator(),
         'singer': singer,
@@ -42,7 +44,8 @@ for titles in title:
         'image': image,
         'detailPage': detail_serial
     }
-
+    # run all the 'detail_serial' and store the desired info into the DB.
+    # once all the data has been stored, pick and choose which ones to show on the detail page.
     if len(list(db.toyproject.find({}))) < 40:
         db.toyproject.insert_one(doc)
 
@@ -64,31 +67,22 @@ def home():
 
 # the detail page url = "https://tickets.interpark.com/goods/"+ last 7 digits
 
-@app.route('/detail', methods=['GET'])
-def get_popup_info():
-    url_receive = request.form.get('urls_give')
-    figured = list(db.toyproject.find({'detailPage': url_receive}, {'_id': False}))
-    return jsonify({'msg': figured})
+# @app.route('/detail', methods=['GET'])
+# def get_popup_info():
+#     url_receive = str(request.form.get('urls_give', False))
+#     print(url_receive)
+#     # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+#     # driver.get(url_receive)
+#     # try:
+#     #     all_list = WebDriverWait(driver, 10).until(
+#     #         EC.presence_of_element_located((By.CLASS_NAME, 'contents'))
+#     #     )
+#     #     return jsonify(all_list.text)
+#     #     driver.quit()
+#     # except:
+#     #     driver.quit()
 
-    # url_receive =request.form.get("url_give", False)
-    # print(url_receive)
-    # if url_receive != "":
-    #     print(url_receive)
-    #
-    #     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-    #     print(url_receive)
-    #     driver.get(url_receive)
-    #     try:
-    #         all_list = WebDriverWait(driver, 10).until(
-    #             EC.presence_of_element_located((By.CLASS_NAME, 'contents'))
-    #         )
-    #         return jsonify(all_list.text)
-    #         driver.quit()
-    #     except:
-    #         driver.quit()
 
-    # detail_data = requests.get('https://tickets.interpark.com/goods/' + url_receive, headers=headers)
-    # return detail_data
 
 
 @app.route('/home', methods=['GET'])
