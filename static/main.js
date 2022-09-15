@@ -2,21 +2,23 @@ $(document).ready(function () {
     loadHomePage()
 });
 
-function testing(key) {
-    let url = ("https://tickets.interpark.com/goods/" + key)
-    console.log(url)
-    $('.popup').show()
+
+
+function detailPage(num){
+
+    console.log(num)
     $.ajax({
-        type: "GET",
-        url: "/detail",
-        data: {
-            urls_give: url
-        },
-        success: function (response) {
-            console.log(response)
+        type:"GET",
+        url:'/home/detail',
+        contentType: "application/json",
+        data:JSON.stringify({data: num}),
+        dataType: "json",
+        success: function(res){
+            console.log(res['msg'])
         }
     })
 }
+
 
 
 function loadHomePage() {
@@ -26,7 +28,6 @@ function loadHomePage() {
         data: {},
         success: function (response) {
             let data = response.msg
-            console.log(data)
             for (let i = 0; i < data.length; i++) {
                 let detailNumber = data[i].image.slice(66, 74)
                 let imageSrc = data[i].image
@@ -35,7 +36,7 @@ function loadHomePage() {
                 let eventLocation = data[i].location
                 let html = `
                         <div class="col">
-                          <div class="card" id = "${detailNumber}">
+                          <div onclick = detailPage(${eventId}) class="card" id = "${detailNumber}">
                             <img src="${imageSrc}" class="card-img-top" alt="...">
                             <a>
                                <div class="card-body">
