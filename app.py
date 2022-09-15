@@ -33,10 +33,9 @@ for titles in title:
     location = titles.select_one('p> span.txt2').text
     image = titles.select_one('div.thumb> img ')['src']
     detail_serial = 'https://tickets.interpark.com/goods/'+ titles.select_one('div.thumb> img ')['src'][66:74]
-    data2 = requests.get(detail_serial, headers =headers)
-    soup2 = BeautifulSoup(data.text, 'html.parser')
-    testing = soup2.select('#container > div.contents > div.productWrapper > div.productMain > div.productMainTop > div > div.summaryBody > div > div.posterBoxTop > img')
-    # print(testing)
+    # data2 = requests.get(detail_serial, headers =headers)
+    # soup2 = BeautifulSoup(data.text, 'html.parser')
+    # testing = soup2.select('#container > div.contents > div.productWrapper > div.productMain > div.productMainTop > div > div.summaryBody > div > div.posterBoxTop > img')
     doc = {
         'id': id_generator(),
         'singer': singer,
@@ -44,18 +43,9 @@ for titles in title:
         'image': image,
         'detailPage': detail_serial
     }
-    # run all the 'detail_serial' and store the desired info into the DB.
-    # once all the data has been stored, pick and choose which ones to show on the detail page.
     if len(list(db.toyproject.find({}))) < 40:
         db.toyproject.insert_one(doc)
 
-
-# for numbers in detail_serial:
-#     detail_data = requests.get('https://tickets.interpark.com/goods/' + numbers)
-#     second_soup = BeautifulSoup(detail_data.text, 'html.parser')
-#     location = second_soup.select_one(
-#         '#container > div.contents > div.productWrapper > div.productMain > div.productMainTop > div > div.summaryBody > ul > li:nth-child(2) > div > p')
-# #     # STOPPED HERE. TRY USING SELENIUM TO RETRIEVE JS DATA
 
 
 
@@ -65,24 +55,17 @@ def home():
     return render_template('index.html')
 
 
+@app.route('/home/detail')
+def detail_info():
+    data = request.get_json()
+    return jsonify({'msg':data})
+
 # the detail page url = "https://tickets.interpark.com/goods/"+ last 7 digits
 
 # @app.route('/detail', methods=['GET'])
 # def get_popup_info():
 #     url_receive = str(request.form.get('urls_give', False))
 #     print(url_receive)
-#     # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-#     # driver.get(url_receive)
-#     # try:
-#     #     all_list = WebDriverWait(driver, 10).until(
-#     #         EC.presence_of_element_located((By.CLASS_NAME, 'contents'))
-#     #     )
-#     #     return jsonify(all_list.text)
-#     #     driver.quit()
-#     # except:
-#     #     driver.quit()
-
-
 
 
 @app.route('/home', methods=['GET'])
@@ -93,3 +76,11 @@ def load_homepage():
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
+
+
+ # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+ #    driver.get("https://tickets.interpark.com/goods/22010748")
+ #
+ #    elem = driver.find_element(By.CLASS_NAME, "infoBtn")
+ #    driver.quit()
+ #    print(elem.text)
