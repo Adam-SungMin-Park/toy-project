@@ -1,4 +1,6 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, make_response
+import jwt
+import datetime
 from bs4 import BeautifulSoup
 from pymongo import MongoClient
 from db import client
@@ -11,8 +13,45 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 import requests
 import uuid
-
+from functools import wraps
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'thisisthesecretkey'
+
+
+def token_require(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.args.get('token')
+        if not token:
+            return jsonify({'msg':'token missing'}), 401
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'])
+        except:
+            return jsonify({'msg':'token invalid'}), 401
+        return f(*args, **kwargs)
+
+    return decorated
+
+
+@app.route('/unprotected')
+def unprotected():
+    return jsonify({'msg':'anyone can view this'})
+
+
+@app.route('/protected')
+@token_require
+def protected():
+    return jsonify({'msg':'not anyone can view this'})
+
+@app.route('/login')
+def login():
+    auth = request.authorization
+    if auth and auth.password == 'password':
+        token = jwt.encode({'user': auth.username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)},
+                           app.config['SECRET_KEY'])
+        return jsonify({'token': token.decode()})
+    return make_response("Couldn't verify", 401, {'WWW-Authenticate': 'Basic realm = "login required'})
+
 
 
 def id_generator():
@@ -33,9 +72,6 @@ for titles in title:
     location = titles.select_one('p> span.txt2').text
     image = titles.select_one('div.thumb> img ')['src']
     detail_serial = 'https://tickets.interpark.com/goods/'+ titles.select_one('div.thumb> img ')['src'][66:74]
-    # data2 = requests.get(detail_serial, headers =headers)
-    # soup2 = BeautifulSoup(data.text, 'html.parser')
-    # testing = soup2.select('#container > div.contents > div.productWrapper > div.productMain > div.productMainTop > div > div.summaryBody > div > div.posterBoxTop > img')
     doc = {
         'id': id_generator(),
         'singer': singer,
@@ -47,12 +83,15 @@ for titles in title:
         db.toyproject.insert_one(doc)
 
 
-
+@app.route('/home')
+def home():
+    return render_template('index.html')
 
 
 @app.route('/')
-def home():
-    return render_template('index.html')
+def login_page():
+    return render_template('login.html')
+
 
 
 @app.route('/home/detail')
@@ -68,7 +107,7 @@ def detail_info():
 #     print(url_receive)
 
 
-@app.route('/home', methods=['GET'])
+@app.route('/home/data', methods=['GET'])
 def load_homepage():
     allList = list(db.toyproject.find({}, {'_id': False}))
     return jsonify({'msg': allList})
@@ -77,10 +116,3 @@ def load_homepage():
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
 
-
- # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
- #    driver.get("https://tickets.interpark.com/goods/22010748")
- #
- #    elem = driver.find_element(By.CLASS_NAME, "infoBtn")
- #    driver.quit()
- #    print(elem.text)

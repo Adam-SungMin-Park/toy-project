@@ -24,10 +24,11 @@ function detailPage(num){
 function loadHomePage() {
     $.ajax({
         type: 'GET',
-        url: '/home',
+        url: '/home/data',
         data: {},
         success: function (response) {
             let data = response.msg
+            console.log(response)
             for (let i = 0; i < data.length; i++) {
                 let detailNumber = data[i].image.slice(66, 74)
                 let imageSrc = data[i].image
