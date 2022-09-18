@@ -58,7 +58,7 @@ def logged_in():
             'expiration': str(datetime.utcnow() + timedelta(seconds = 120))
         },
         app.config['SECRET_KEY'])
-        return jsonify({'token':token})
+        return jsonify({'token':jwt.decode(token, algorithms=['HS256'])})
     else:
         return make_response('unable to verify', 403,
                              {'WWW-Authenticate':'Basic realm: "Authentication Failed'})
